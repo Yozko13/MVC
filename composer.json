@@ -1,0 +1,17 @@
+{
+    "name": "yozko/mvc",
+    "description": "This is the test framework for learning on mvc",
+    "type": "project",
+    "license": "dev",
+    "authors": [
+        {
+            "name": "Yozdzhan Asanov",
+            "email": "yasanov@advisebrokers.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": { "App\\": ["App/"] }
+    }
+}

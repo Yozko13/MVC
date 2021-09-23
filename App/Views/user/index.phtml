@@ -1,0 +1,13 @@
+<h1><?= $main; ?></h1>
+<div>
+    <a href="/user/add-user" title="">Add user</a>
+    <ul>
+
+        <?php foreach ($users as $user): ?>
+
+            <li><?= $user->name; ?></li>
+
+        <?php endforeach; ?>
+
+    </ul>
+</div>
