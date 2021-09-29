@@ -28,7 +28,11 @@ abstract class AbstractModel
         return $this->pdo;
     }
 
-    public function insert($data)
+    /**
+     * @param $data
+     * @return int
+     */
+    public function insert($data): int
     {
         $columns     = implode(', ', array_keys($data));
         $dataValues  = array_values($data);
@@ -37,6 +41,8 @@ abstract class AbstractModel
         $sql        = "INSERT INTO {$this->tableName} ({$columns}) VALUES ({$valueString})";
         $statement  = $this->pdo->prepare($sql);
         $statement->execute($dataValues);
+
+        return $statement->rowCount();
     }
 
     /**

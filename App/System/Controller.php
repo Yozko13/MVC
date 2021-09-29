@@ -13,6 +13,20 @@ abstract class Controller
     }
 
     /**
+     * @return bool
+     */
+    public function isLoggedIn(): bool
+    {
+        return !empty($_SESSION['isLoggedIn']);
+    }
+
+    public function redirectTo($controller, $method = '')
+    {
+        header('Location: '. $controller . $method);
+        die;
+    }
+
+    /**
      * @throws \Exception
      */
     public function showView($view, $params = [])

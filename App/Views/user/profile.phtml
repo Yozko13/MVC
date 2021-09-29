@@ -1,2 +1,13 @@
-<?php
-echo $profile;
+<h1><?= $profile; ?></h1>
+<a href="/user">Home</a>
+<div>
+    <ul>
+
+        <?php foreach($user as $key => $val): ?>
+
+        <li><?= $key; ?>: <strong><?= $val; ?></strong></li>
+
+        <?php endforeach; ?>
+
+    </ul>
+</div>

@@ -17,12 +17,16 @@ class User extends AbstractModel
         parent::__construct();
     }
 
+    /**
+     * @param array $city
+     * @return array|false
+     */
     public function getAll($city = [])
     {
-        $sql = "SELECT * FROM {$this->tableName}";
+        $sql = "SELECT * FROM {$this->tableName} WHERE id <> :id";
 
         $statement = $this->getPdo()->prepare($sql);
-        $statement->execute();
+        $statement->execute([':id' => $_SESSION['user']['id']]);
 
         if(!empty($city)) {
             $sql .= ' WHERE city = ?';
@@ -31,5 +35,33 @@ class User extends AbstractModel
         }
 
         return $statement->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    /**
+     * @param $email
+     * @return mixed
+     */
+    public function getUserIdAndPasswordByEmail($email)
+    {
+        $sql = "SELECT id, password FROM {$this->tableName} WHERE email = :email";
+
+        $statement = $this->getPdo()->prepare($sql);
+        $statement->execute([':email' => $email]);
+
+        return $statement->fetch(\PDO::FETCH_OBJ);
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     */
+    public function getUserById($id)
+    {
+        $sql = "SELECT * FROM {$this->tableName} WHERE id = :id";
+
+        $statement = $this->getPdo()->prepare($sql);
+        $statement->execute([':id' => $id]);
+
+        return $statement->fetch(\PDO::FETCH_OBJ);
     }
 }

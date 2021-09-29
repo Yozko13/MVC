@@ -8,6 +8,13 @@ use App\System\Controller;
 class UserController extends Controller
 {
 
+    public function __construct()
+    {
+        if(!$this->isLoggedIn()) {
+            $this->redirectTo('/login');
+        }
+    }
+
     /**
      * @throws \Exception
      */
@@ -25,9 +32,15 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
-    public function profile()
+    public function profile($id)
     {
-        $this->showView('user/profile', ['profile' => 'Profile']);
+        $user     = new User();
+        $currUser = $user->getUserById($id);
+
+        $this->showView('user/profile', [
+            'profile' => 'Profile',
+            'user'    => $currUser
+        ]);
     }
 
     /**
@@ -43,8 +56,23 @@ class UserController extends Controller
      */
     public function addUser()
     {
-        $user = new User();
-        $user->insert(['name' => 'testmest', 'city' => 'dimitrovgrad']);
+        if(!empty($_POST)) {
+//            $validated = $request->validate([
+//                'title' => 'required|unique:posts|max:255',
+//                'body' => 'required',
+//            ], [
+//                'title.required' => 'sadsad'
+//            ]);
+
+            $data = $_POST;
+            $data['password'] = password_hash($_POST['password'], PASSWORD_BCRYPT);
+
+            $user = new User();
+
+            if($user->insert($data)) {
+                $this->redirectTo('/user');
+            }
+        }
 
         $this->showView('user/add-user', ['addUser' => 'Add User']);
     }
@@ -52,22 +80,31 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
-    public function updateUser()
+    public function updateUser($id)
     {
-        $user = new User();
-        $user->update(['name' => 'test update 1', 'city' => 'test city 1', 'id' => 7], ['id' => 7]);
+        $user       = new User();
+        $chosenUser = $user->getUserById($id);
 
-        $this->showView('user/update-user', ['updateUser' => 'Update User']);
+        if(!empty($_POST)) {
+            $user->update($_POST, ['id' => $id]);
+
+            $chosenUser = $user->getUserById($id);
+        }
+
+        $this->showView('user/update-user', [
+            'updateUser' => 'Update User',
+            'chosenUser' => $chosenUser
+        ]);
     }
 
     /**
      * @throws \Exception
      */
-    public function deleteUser()
+    public function deleteUser($id)
     {
         $user = new User();
-        $user->delete(['id' => 6]);
+        $user->delete(['id' => $id]);
 
-        $this->showView('user/delete-user', ['deleteUser' => 'Delete User']);
+        return $this->index();
     }
 }

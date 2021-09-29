@@ -1,4 +1,9 @@
 <h1><?= $updateUser ?></h1>
+<a href="/user">Home</a>
 <div>
-
+    <form action="/user/update-user/<?= $chosenUser->id; ?>" method="post">
+        <input type="text" name="name" value="<?= $chosenUser->name; ?>" />
+        <input type="text" name="city" value="<?= $chosenUser->city; ?>" />
+        <button type="submit">Edit</button>
+    </form>
 </div>
