@@ -5,6 +5,7 @@ use App\Controllers\DefaultController;
 $ds = DIRECTORY_SEPARATOR;
 
 require_once __DIR__ ."{$ds}..{$ds}vendor{$ds}autoload.php";
+$config = require_once __DIR__ ."{$ds}..{$ds}configs{$ds}config.php";
 
 session_start();
 
