@@ -26,8 +26,11 @@ class RegisterController extends Controller
             $user = new User();
 
             if($user->insert($data)) {
+                $getUserId = $user->getUserIdAndPasswordByEmail($_POST['email']);
+
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['user']       = [
+                    'id'    => $getUserId->id,
                     'email' => $_POST['email']
                 ];
 

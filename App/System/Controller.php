@@ -4,9 +4,9 @@ namespace App\System;
 
 abstract class Controller
 {
-    private array $params = array();
+    private array $params = [];
 
-    private string $render = __DIR__ .'/../Views/errors/404.php';
+    private string $render;
 
     public function __construct()
     {
@@ -41,6 +41,16 @@ abstract class Controller
         }
 
         throw new \Exception('View not found');
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function systemError()
+    {
+        http_response_code(500);
+
+        $this->showView('errors/500');
     }
 
     public function __destruct()

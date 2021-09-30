@@ -105,6 +105,6 @@ class UserController extends Controller
         $user = new User();
         $user->delete(['id' => $id]);
 
-        return $this->index();
+        $this->redirectTo('/user');
     }
 }

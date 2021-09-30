@@ -6,13 +6,6 @@ class DatabaseConnection
 {
     private \PDO $pdo;
 
-    private string $host    = 'db';
-    private string $dbName  = 'mvc';
-    private string $user    = 'mvc';
-    private string $pass    = 'password';
-    private string $port    = "3306";
-    private string $charset = 'utf8mb4';
-
     private static $instance;
 
     private function __construct()

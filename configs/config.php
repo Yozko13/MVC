@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'app' => [
+        'debug' => true
+    ],
     'database' => [
         'host'      => 'db',
         'db_name'   => 'mvc',
