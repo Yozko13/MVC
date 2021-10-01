@@ -97,9 +97,7 @@ final class FrontController
         try {
             return $controllerInstance->$method(...$params);
         } catch (\Throwable $exception) {
-            global $config;
-
-            if(!empty($config['app']['debug'])) {
+            if(!empty(Registry::getConfig()['app']['debug'])) {
                 throw $exception;
             }
 

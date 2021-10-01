@@ -10,7 +10,7 @@ class DatabaseConnection
 
     private function __construct()
     {
-        global $config;
+        $config = Registry::getConfig();
 
         $options = [
             \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,

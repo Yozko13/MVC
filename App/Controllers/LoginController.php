@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\System\Controller;
+use App\System\Registry;
 
 class LoginController extends Controller
 {

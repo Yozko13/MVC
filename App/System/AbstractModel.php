@@ -13,7 +13,7 @@ abstract class AbstractModel
      */
     public function __construct()
     {
-        $this->pdo = DatabaseConnection::getInstance()->getConnection();
+        $this->pdo = Registry::getDatabase()->getConnection();
 
         if (empty($this->tableName)) {
             throw new \Exception('Please create and fill property $tableName into this class');

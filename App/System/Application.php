@@ -8,7 +8,10 @@ final class Application
 {
     private static $instance;
 
-    private function __construct() {}
+    private function __construct()
+    {
+        self::initRegistry();
+    }
 
     /**
      * Make clone magic method private, so nobody can clone instance.
@@ -43,5 +46,12 @@ final class Application
     public function run()
     {
         FrontController::getInstance()->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+    }
+
+    private function initRegistry()
+    {
+        global $config;
+        Registry::set('config', $config);
+        Registry::set('database', DatabaseConnection::getInstance());
     }
 }
