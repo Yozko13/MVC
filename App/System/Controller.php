@@ -12,14 +12,6 @@ abstract class Controller
     {
     }
 
-    /**
-     * @return bool
-     */
-    public function isLoggedIn(): bool
-    {
-        return !empty($_SESSION['isLoggedIn']);
-    }
-
     public function redirectTo($controller, $method = '')
     {
         header('Location: '. $controller . $method);
@@ -33,14 +25,20 @@ abstract class Controller
     {
         $file = __DIR__ .'/../Views/' . strtolower($view) . '.phtml';
 
-        if (file_exists($file)) {
-            $this->render = $file;
-            $this->params = $params;
-
-            return;
+        if (!file_exists($file)) {
+            throw new \Exception('View not found');
         }
 
-        throw new \Exception('View not found');
+        if (!is_readable($file)) {
+            throw new \Exception('View is not readable');
+        }
+
+        $this->render = $file;
+        $this->params = $params;
+
+        extract($this->params);
+
+        require_once $file;
     }
 
     /**
@@ -55,8 +53,5 @@ abstract class Controller
 
     public function __destruct()
     {
-        extract($this->params);
-
-        include($this->render);
     }
 }

@@ -5,6 +5,7 @@ namespace App\System;
 /**
  * @method static DatabaseConnection getDatabase()
  * @method static array getConfig()
+ * @method static getDebugBarTracking()
  */
 final class Registry
 {
@@ -24,6 +25,9 @@ final class Registry
     }
 
     /**
+     * @param $name
+     * @param $arguments
+     * @return mixed
      * @throws \Exception
      */
     public static function __callStatic($name, $arguments)

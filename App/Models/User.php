@@ -23,18 +23,9 @@ class User extends AbstractModel
      */
     public function getAll($city = [])
     {
-        $sql = "SELECT * FROM {$this->tableName} WHERE id <> :id";
+        $sql = "SELECT * FROM {$this->tableName}";
 
-        $statement = $this->getPdo()->prepare($sql);
-        $statement->execute([':id' => $_SESSION['user']['id']]);
-
-        if(!empty($city)) {
-            $sql .= ' WHERE city = ?';
-            $statement = $this->getPdo()->prepare($sql);
-            $statement->execute($city);
-        }
-
-        return $statement->fetchAll(\PDO::FETCH_OBJ);
+        return $this->getPdo()->fetchAll($sql);
     }
 
     /**
@@ -59,9 +50,7 @@ class User extends AbstractModel
     {
         $sql = "SELECT * FROM {$this->tableName} WHERE id = :id";
 
-        $statement = $this->getPdo()->prepare($sql);
-        $statement->execute([':id' => $id]);
+        return $this->getPdo()->fetchOne($sql, ['id' => $id]);
 
-        return $statement->fetch(\PDO::FETCH_OBJ);
     }
 }

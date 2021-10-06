@@ -112,13 +112,20 @@ final class FrontController
      */
     public function dispatch($urlPath)
     {
+        $params = [];
+
         if($urlPath == '/') {
-            return $this->executeController(new DefaultController(), 'index');
+            $this->executeController(new DefaultController(), 'index');
+
+            return [
+                'controller' => 'DefaultController',
+                'method'     => 'index',
+                'params'     => $params
+            ];
         }
 
         $segments = explode('/', $urlPath);
         $method   = $controllerClass = '';
-        $params   = [];
 
         if(isset($segments[1]) && !empty($segments[1])) {
             $controllerClass = $this->getController($segments[1]);
@@ -141,6 +148,12 @@ final class FrontController
             $params = $this->getParams($segments);
         }
 
-        return $this->executeController(new $controllerClass, $method, $params);
+        $this->executeController(new $controllerClass, $method, $params);
+
+        return [
+            'controller' => $controllerClass,
+            'method'     => $method,
+            'params'     => $params
+        ];
     }
 }

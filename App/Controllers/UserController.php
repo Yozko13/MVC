@@ -3,10 +3,12 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\System\AuthTrait;
 use App\System\Controller;
 
 class UserController extends Controller
 {
+    use AuthTrait;
 
     public function __construct()
     {

@@ -4,7 +4,10 @@ namespace App\System;
 
 abstract class AbstractModel
 {
-    private \PDO $pdo;
+    /**
+     * @var \Aura\Sql\ExtendedPdo
+     */
+    private $pdo;
 
     protected string $tableName;
 
@@ -21,9 +24,9 @@ abstract class AbstractModel
     }
 
     /**
-     * @return \PDO
+     * @return \Aura\Sql\ExtendedPdo
      */
-    public function getPdo(): \PDO
+    public function getPdo()
     {
         return $this->pdo;
     }

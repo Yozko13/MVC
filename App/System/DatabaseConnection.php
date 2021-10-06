@@ -2,9 +2,14 @@
 
 namespace App\System;
 
+use Aura\Sql\ExtendedPdo;
+
 class DatabaseConnection
 {
-    private \PDO $pdo;
+    /**
+     * @var ExtendedPdo
+     */
+    private $pdo;
 
     private static $instance;
 
@@ -12,15 +17,12 @@ class DatabaseConnection
     {
         $config = Registry::getConfig();
 
-        $options = [
-            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-            \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES   => false,
-        ];
-
         $dsn = "mysql:host={$config['database']['host']};dbname={$config['database']['db_name']};charset={$config['database']['charset']};port={$config['database']['port']}";
         try {
-            $this->pdo = new \PDO($dsn, $config['database']['user_name'], $config['database']['pass'], $options);
+            $this->pdo = new ExtendedPdo($dsn, $config['database']['user_name'], $config['database']['pass']);
+            $this->pdo->getProfiler()->setActive(true);
+            $this->pdo->getProfiler()->setLogFormat("{function}---{duration}---{statement}---{backtrace}");
+
         } catch (\PDOException $e) {
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }
@@ -50,7 +52,7 @@ class DatabaseConnection
         return self::$instance;
     }
 
-    public function getConnection(): \PDO
+    public function getConnection(): ExtendedPdo
     {
         return $this->pdo;
     }

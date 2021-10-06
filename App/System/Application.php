@@ -2,7 +2,7 @@
 
 namespace App\System;
 
-use App\Controllers\DefaultController;
+use App\System\DebugBarTracking\DebugBarTracking;
 
 final class Application
 {
@@ -51,7 +51,14 @@ final class Application
     private function initRegistry()
     {
         global $config;
+
         Registry::set('config', $config);
+        Registry::set('debugBarTracking', DebugBarTracking::getInstance());
         Registry::set('database', DatabaseConnection::getInstance());
+    }
+
+    public function __destruct()
+    {
+        echo Registry::getDebugBarTracking()->render();
     }
 }
