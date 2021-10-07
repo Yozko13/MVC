@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f62f52a52dfad0770dcdb5527d3e128b",
+    "content-hash": "35b619654efdcc3be1282a73b5790590",
     "packages": [
         {
             "name": "aura/sql",
@@ -63,70 +63,6 @@
                 "source": "https://github.com/auraphp/Aura.Sql/tree/3.x"
             },
             "time": "2020-10-19T22:29:49+00:00"
-        },
-        {
-            "name": "filisko/pdo-plus",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/filisko/pdo-plus.git",
-                "reference": "ee32e3095461652e29c7dea2cd3feda6bb286f38"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/filisko/pdo-plus/zipball/ee32e3095461652e29c7dea2cd3feda6bb286f38",
-                "reference": "ee32e3095461652e29c7dea2cd3feda6bb286f38",
-                "shasum": ""
-            },
-            "require": {
-                "ext-pdo": "*",
-                "php": ">=8.0"
-            },
-            "require-dev": {
-                "ext-sqlite3": "*",
-                "friendsofphp/php-cs-fixer": "^2.16",
-                "infection/infection": "^0.23.0",
-                "php-coveralls/php-coveralls": "^2.4",
-                "phpstan/phpstan": "^0.12.89",
-                "phpunit/phpunit": "^9.5",
-                "tracy/tracy": "^2.8"
-            },
-            "suggest": {
-                "jdorn/sql-formatter": "Highlights your SQL queries inside Tracy Bar Panel",
-                "tracy/tracy": "Tracy debugger. Remember this package includes a Bar Panel that shows logged SQL queries"
-            },
-            "default-branch": true,
-            "type": "package",
-            "autoload": {
-                "psr-4": {
-                    "Filisko\\PDOplus\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Filis Futsarov",
-                    "email": "filisfutsarov@gmail.com"
-                }
-            ],
-            "description": "PDO+ extends PDO in order to log all your queries. It also includes a Bar Panel for Tracy",
-            "keywords": [
-                "debug",
-                "log",
-                "pdo",
-                "php8",
-                "queries",
-                "sql",
-                "tracy"
-            ],
-            "support": {
-                "issues": "https://github.com/filisko/pdo-plus/issues",
-                "source": "https://github.com/filisko/pdo-plus/tree/v4.0.2"
-            },
-            "time": "2021-07-23T14:58:49+00:00"
         },
         {
             "name": "myclabs/php-enum",
@@ -238,14 +174,55 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "yozko13/debug-bar-tracking",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Yozko13/debug-bar-tracking.git",
+                "reference": "df6267f2cb248bc1dc2ccb11609d5721928e6057"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Yozko13/debug-bar-tracking/zipball/df6267f2cb248bc1dc2ccb11609d5721928e6057",
+                "reference": "df6267f2cb248bc1dc2ccb11609d5721928e6057",
+                "shasum": ""
+            },
+            "require": {
+                "myclabs/php-enum": "dev-master",
+                "php": ">=7.4"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "DebugBar\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Yozko13",
+                    "email": "yozko13@gmail.com"
+                }
+            ],
+            "description": "This is debug bar for tracking on your project",
+            "homepage": "https://github.com/Yozko13/DebugBarTracking",
+            "support": {
+                "issues": "https://github.com/Yozko13/debug-bar-tracking/issues",
+                "source": "https://github.com/Yozko13/debug-bar-tracking/tree/v1.1"
+            },
+            "time": "2021-10-07T14:47:06+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "myclabs/php-enum": 20,
-        "filisko/pdo-plus": 20
+        "myclabs/php-enum": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

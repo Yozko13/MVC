@@ -21,8 +21,6 @@ class DatabaseConnection
         try {
             $this->pdo = new ExtendedPdo($dsn, $config['database']['user_name'], $config['database']['pass']);
             $this->pdo->getProfiler()->setActive(true);
-            $this->pdo->getProfiler()->setLogFormat("{function}---{duration}---{statement}---{backtrace}");
-
         } catch (\PDOException $e) {
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
         }

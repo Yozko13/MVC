@@ -3,12 +3,12 @@
 namespace App\System\DebugBarTracking;
 
 use App\System\DebugBarTracking\Decorators\OutputDecorator;
+use App\System\DebugBarTracking\Entities\DebugBarInformationHolderEntity;
 use App\System\DebugBarTracking\Enums\OutputDecoratorRenderTypes;
 use App\System\DebugBarTracking\Enums\ProfilerTypes;
 use App\System\DebugBarTracking\SQL\Providers\AuraSql;
 use App\System\DebugBarTracking\SQL\Providers\PdoSql;
 use App\System\DebugBarTracking\SQL\SqlProfiler;
-use App\System\Registry;
 use Aura\Sql\Exception;
 
 final class DebugBarTracking
@@ -16,6 +16,10 @@ final class DebugBarTracking
     private static $instance;
     private float $memoryStart;
     private float $timeStart;
+    /**
+     * @var SqlProfiler $profiler
+     */
+    private $profiler;
 
     private function __construct()
     {
@@ -51,45 +55,45 @@ final class DebugBarTracking
     }
 
     /**
-     * @return array
+     * @return DebugBarInformationHolderEntity
      */
-    private function collectData(): array
+    private function collectData(): DebugBarInformationHolderEntity
     {
-        $data =  [
-            'getUrl'           => $this->getUrl(),
-            'getClientIP'      => $this->getClientIP(),
-            'getRequestMethod' => $this->getRequestMethod(),
-            'getRequestPost'   => $this->getRequestPost(),
-            'getRequestGet'    => $this->getRequestGet(),
-            'getSql'           => $this->getSql(),
-            'getUser'          => $this->getUser(),
-            'getMemory'        => $this->getMemory(),
-            'getTime'          => $this->getTime()
-        ];
+        $debugBarHolderEntities = new DebugBarInformationHolderEntity();
+        $debugBarHolderEntities->setUrl($this->getUrl());
+        $debugBarHolderEntities->setClientIP($this->getClientIP());
+        $debugBarHolderEntities->setRequestMethod($this->getRequestMethod());
+        $debugBarHolderEntities->setRequestPost($this->getRequestPost());
+        $debugBarHolderEntities->setRequestGet($this->getRequestGet());
+        $debugBarHolderEntities->setSql($this->getSql());
+        $debugBarHolderEntities->setUser($this->getUser());
+        $debugBarHolderEntities->setMemory($this->getMemory());
+        $debugBarHolderEntities->setTime($this->getTime());
 
-        return $data;
+        return $debugBarHolderEntities;
     }
 
+    /**
+     * @return false|string
+     */
     public function render()
     {
-        $data = $this->collectData();
-
-        $outputDecorator = new OutputDecorator($data);
-        $outputDecorator->decorate(OutputDecoratorRenderTypes::DECORATE_HTML());
+        $outputDecorator = new OutputDecorator($this->collectData());
+        return $outputDecorator->decorate(OutputDecoratorRenderTypes::DECORATE_HTML());
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    private function getUrl(): array
+    private function getUrl(): string
     {
-        return ['url' => (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") ."://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"];
+        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") ."://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     }
 
     /**
-     * @return array
+     * @return string
      */
-    private function getClientIP(): array
+    private function getClientIP(): string
     {
         $clientIP = $_SERVER['REMOTE_ADDR'];
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -98,15 +102,15 @@ final class DebugBarTracking
             $clientIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
 
-        return ['client_ip' => $clientIP];
+        return $clientIP;
     }
 
     /**
-     * @return array
+     * @return string
      */
-    private function getRequestMethod(): array
+    private function getRequestMethod(): string
     {
-        return ['request_method' => $_SERVER['REQUEST_METHOD']];
+        return $_SERVER['REQUEST_METHOD'];
     }
 
     /**
@@ -114,7 +118,7 @@ final class DebugBarTracking
      */
     private function getRequestPost(): array
     {
-        return ['request_post' => $_POST];
+        return $_POST;
     }
 
     /**
@@ -122,10 +126,15 @@ final class DebugBarTracking
      */
     private function getRequestGet(): array
     {
-        return ['request_get' => $_GET];
+        return $_GET;
     }
 
-    private function setSqlProfilerDriver(ProfilerTypes $type, $profiler)
+    /**
+     * @param ProfilerTypes $type
+     * @param $profiler
+     * @throws Exception
+     */
+    public function setSqlProfilerDriver(ProfilerTypes $type, $profiler)
     {
         switch ($type) {
             case ProfilerTypes::PROFILER_TYPE_AURASQL:
@@ -138,7 +147,7 @@ final class DebugBarTracking
                 throw new Exception('Invalid provider');
         }
 
-        $sqlProfiler = new SqlProfiler($provider);
+        $this->profiler = new SqlProfiler($provider);
     }
 
     /**
@@ -146,13 +155,7 @@ final class DebugBarTracking
      */
     private function getSql(): array
     {
-        $trackMessages = Registry::getDatabase()->getConnection()->getProfiler()->getLogger()->getMessages();
-        $sqlLog = [];
-        foreach ($trackMessages as $trackMessage) {
-            $sqlLog[] = explode('---', $trackMessage);
-        }
-
-        return $sqlLog;
+        return $this->profiler->getProfileData();
     }
 
     /**
@@ -160,37 +163,22 @@ final class DebugBarTracking
      */
     private function getUser(): array
     {
-        $user = ['is_logged_in' => $_SESSION['isLoggedIn']];
-        $user = array_merge($user , $_SESSION['user']);
-
-        return $user;
+        return array_merge(['is_logged_in' => $_SESSION['isLoggedIn']] , $_SESSION['user']);
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    private function getMemory(): array
+    private function getMemory(): string
     {
-        $memoryEnd = memory_get_usage();
-
-        return [
-            'memory_start' => $this->memoryStart .' MB',
-            'memory_end'   => $memoryEnd .' MB',
-            'memory_used'  => round(($memoryEnd - $this->memoryStart) / 1048576,2) .' MB'
-        ];
+        return round((memory_get_usage() - $this->memoryStart) / 1048576,2) .' MB';
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    private function getTime(): array
+    private function getTime(): string
     {
-        $timeEnd = microtime(true);
-
-        return [
-            'time_start' => $this->timeStart .'ms',
-            'time_end'   => $timeEnd .'ms',
-            'time_used'  => round($timeEnd - $this->timeStart, 4) .'sec'
-        ];
+        return round(microtime(true) - $this->timeStart, 4) .'sec';
     }
 }

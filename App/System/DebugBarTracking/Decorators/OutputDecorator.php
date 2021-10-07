@@ -2,18 +2,19 @@
 
 namespace App\System\DebugBarTracking\Decorators;
 
+use App\System\DebugBarTracking\Entities\DebugBarInformationHolderEntity;
 use App\System\DebugBarTracking\Enums\OutputDecoratorRenderTypes;
 
 class OutputDecorator extends OutputDecoratorRenderTypes
 {
-    private array $data;
+    private DebugBarInformationHolderEntity $holderEntities;
 
     /**
-     * @param array $data
+     * @param DebugBarInformationHolderEntity $holderEntities
      */
-    public function __construct(array $data)
+    public function __construct(DebugBarInformationHolderEntity $holderEntities)
     {
-        $this->data = $data;
+        $this->holderEntities = $holderEntities;
     }
 
     /**
@@ -43,47 +44,26 @@ class OutputDecorator extends OutputDecoratorRenderTypes
     }
 
     /**
-     * @param $value
-     * @param string $typeKey
-     * @return array|mixed|string
+     * @param array $data
+     * @param string $typeHandle
+     * @return string
      */
-    private static function getDataValue($value, string $typeKey = '')
+    private static function prepareDataValueArrayForHtml(array $data, string $typeHandle = ''): string
     {
-        if(is_bool($value)) {
-            $returnBoolText = 'No';
-            if($value) {
-                $returnBoolText = 'Yes';
-            }
-
-            return $returnBoolText;
-        }
-
-        if(is_array($value)) {
-            if(empty($value)) {
-                return 'Empty';
-            }
-
-            if($typeKey == 'params') {
-                return implode(' | ', $value);
-            }
-
-            $value = '';
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param $data
-     * @param string $typeKey
-     */
-    private static function prepareDataValueArrayForHtml($data, $typeKey = '')
-    {
+        $html = '';
         foreach ($data as $key => $value) {
             $prepareKey = $key;
-            $dataValue  = self::getDataValue($value, $key);
+            $dataValue  = $value;
 
-            if($typeKey == 'getSql') {
+            if(is_bool($value)) {
+                $dataValue = 'No';
+
+                if($value) {
+                    $dataValue = 'Yes';
+                }
+            }
+
+            if($typeHandle == 'SQL') {
                 $prepareKey = $value[0];
                 $dataValue  = round($value[1], 4) .'sec';
 
@@ -92,10 +72,38 @@ class OutputDecorator extends OutputDecoratorRenderTypes
                 }
             }
 
-            echo "<dd>
+            $html .= "<dd>
                 <strong>{$prepareKey}:</strong> {$dataValue}
             </dd>";
         }
+
+        return $html;
+    }
+
+    /**
+     * @param string $handle
+     * @param $value
+     * @return string
+     */
+    private function prepareHtml(string $handle, $value): string
+    {
+        if(empty($value)) {
+            return '';
+        }
+
+        $handleList = '';
+        if(is_array($value)) {
+            $handleList = $this->prepareDataValueArrayForHtml($value, $handle);
+
+            $value = '';
+        }
+
+        $html = "<dt>
+                <strong>{$handle}:</strong> {$value}
+            </dt>";
+        $html .= $handleList;
+
+        return $html;
     }
 
     /**
@@ -104,47 +112,18 @@ class OutputDecorator extends OutputDecoratorRenderTypes
     private function decorateHtml(): string
     {
         $html = '<div><dl>';
-
-        foreach ($this->data as $key => $value) {
-            $dataValue  = self::getDataValue($value);
-
-            $html .= "<dt>
-                <strong>{$key}:</strong> {$dataValue}
-            </dt>";
-
-            if(is_array($value)) {
-                self::prepareDataValueArrayForHtml($value, $key);
-            }
-        }
-
+        $html .= $this->prepareHtml('URL', $this->holderEntities->getUrl());
+        $html .= $this->prepareHtml('IP', $this->holderEntities->getClientIP());
+        $html .= $this->prepareHtml('Method', $this->holderEntities->getRequestMethod());
+        $html .= $this->prepareHtml('POST', $this->holderEntities->getRequestPost());
+        $html .= $this->prepareHtml('GET', $this->holderEntities->getRequestGet());
+        $html .= $this->prepareHtml('SQL', $this->holderEntities->getSql());
+        $html .= $this->prepareHtml('User', $this->holderEntities->getUser());
+        $html .= $this->prepareHtml('Memory', $this->holderEntities->getMemory());
+        $html .= $this->prepareHtml('Time', $this->holderEntities->getTime());
         $html .= '</dl></div>';
 
         return $html;
-    }
-
-    /**
-     * @param $data
-     * @param string $typeKey
-     */
-    private static function prepareDataValueArrayForTable($data, $typeKey = '')
-    {
-        foreach ($data as $key => $value) {
-            $prepareKey = $key;
-            $dataValue  = self::getDataValue($value, $key);
-
-            if($typeKey == 'getSql') {
-                $prepareKey = $value[0];
-                $dataValue  = round($value[1], 4) .'sec';
-
-                if(!empty($value[2])) {
-                    $dataValue  .= " | {$value[2]}";
-                }
-            }
-
-            echo "<dd>
-                <strong>{$prepareKey}:</strong> {$dataValue}
-            </dd>";
-        }
     }
 
     /**

@@ -2,7 +2,8 @@
 
 namespace App\System;
 
-use App\System\DebugBarTracking\DebugBarTracking;
+use DebugBar\DebugBarTracking;
+use DebugBar\Enums\ProfilerTypes;
 
 final class Application
 {
@@ -55,6 +56,11 @@ final class Application
         Registry::set('config', $config);
         Registry::set('debugBarTracking', DebugBarTracking::getInstance());
         Registry::set('database', DatabaseConnection::getInstance());
+
+        Registry::getDebugBarTracking()->setSqlProfilerDriver(
+            ProfilerTypes::PROFILER_TYPE_AURASQL(),
+            Registry::getDatabase()->getConnection()->getProfiler()
+        );
     }
 
     public function __destruct()
