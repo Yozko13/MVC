@@ -14,10 +14,20 @@ final class Registry
      */
     private static array $storage = [];
 
-    private function __construct(){}
-    private function __clone(){}
-    private function __sleep(){}
-    private function __wakeup(){}
+    /**
+     * Make clone magic method private, so nobody can clone instance.
+     */
+    private function __clone() {}
+
+    /**
+     * Make sleep magic method private, so nobody can serialize instance.
+     */
+    private function __sleep() {}
+
+    /**
+     * Make wakeup magic method private, so nobody can unserializable instance.
+     */
+    private function __wakeup() {}
 
     public static function set($key, $value)
     {

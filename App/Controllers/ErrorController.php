@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\System\Controller;
 
+/**
+ * Class ErrorController
+ */
 class ErrorController extends Controller
 {
     /**

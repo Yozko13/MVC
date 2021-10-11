@@ -4,6 +4,9 @@ namespace App\System;
 
 use Aura\Sql\ExtendedPdo;
 
+/**
+ * Class DatabaseConnection
+ */
 class DatabaseConnection
 {
     /**
@@ -11,8 +14,14 @@ class DatabaseConnection
      */
     private $pdo;
 
+    /**
+     * @var $instance
+     */
     private static $instance;
 
+    /**
+     *
+     */
     private function __construct()
     {
         $config = Registry::getConfig();
@@ -41,6 +50,9 @@ class DatabaseConnection
      */
     private function __wakeup() {}
 
+    /**
+     * @return \App\System\DatabaseConnection|null
+     */
     public static function getInstance(): ?DatabaseConnection
     {
         if (self::$instance == null) {
@@ -50,6 +62,9 @@ class DatabaseConnection
         return self::$instance;
     }
 
+    /**
+     * @return \Aura\Sql\ExtendedPdo
+     */
     public function getConnection(): ExtendedPdo
     {
         return $this->pdo;

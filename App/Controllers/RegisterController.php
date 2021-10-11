@@ -3,10 +3,16 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\System\AuthTrait;
 use App\System\Controller;
 
+/**
+ * Class RegisterController
+ */
 class RegisterController extends Controller
 {
+    use AuthTrait;
+
     /**
      * @throws \Exception
      */
@@ -30,7 +36,7 @@ class RegisterController extends Controller
 
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['user']       = [
-                    'id'    => $getUserId->id,
+                    'id'    => $getUserId['id'],
                     'email' => $_POST['email']
                 ];
 

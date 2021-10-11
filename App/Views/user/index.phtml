@@ -8,9 +8,9 @@
         <?php foreach ($users as $user): ?>
 
             <li>
-                <?= $user->name; ?>
-                <a href="/user/update-user/<?= $user->id; ?>" title="">Edit</a>
-                <a href="/user/delete-user/<?= $user->id; ?>" title="">Delete</a>
+                <?= $user['name']; ?>
+                <a href="/user/update-user/<?= $user['id']; ?>" title="">Edit</a>
+                <a href="/user/delete-user/<?= $user['id']; ?>" title="">Delete</a>
             </li>
 
         <?php endforeach; ?>

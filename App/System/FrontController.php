@@ -3,16 +3,35 @@
 namespace App\System;
 
 use App\Controllers\DefaultController;
-use App\Controllers\ErrorController;
 
+/**
+ * Final Class FrontController
+ */
 final class FrontController
 {
+    /**
+     * @var $instance
+     */
     private static $instance;
 
+    /**
+     * Construct
+     */
     private function __construct() {}
 
+    /**
+     * Make clone magic method private, so nobody can clone instance.
+     */
     private function __clone() {}
+
+    /**
+     * Make sleep magic method private, so nobody can serialize instance.
+     */
     private function __sleep() {}
+
+    /**
+     * Make wakeup magic method private, so nobody can unserializable instance.
+     */
     private function __wakeup() {}
 
     /**
@@ -87,10 +106,11 @@ final class FrontController
 
     /**
      * @param Controller $controllerInstance
-     * @param string $method
-     * @param array $params
-     * @return false|mixed
-     * @throws \Exception|\Throwable
+     * @param string     $method
+     * @param array      $params
+     *
+     * @return mixed
+     * @throws \Throwable
      */
     private function executeController(Controller $controllerInstance, string $method, array $params = [])
     {
@@ -107,10 +127,10 @@ final class FrontController
 
     /**
      * @param $urlPath
-     * @return false|mixed|void
+     * @return array
      * @throws \Exception|\Throwable
      */
-    public function dispatch($urlPath)
+    public function dispatch($urlPath): array
     {
         $params = [];
 

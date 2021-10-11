@@ -2,17 +2,31 @@
 
 namespace App\System;
 
+/**
+ * Abstract Class Controller
+ */
 abstract class Controller
 {
+    /**
+     * @var array
+     */
     private array $params = [];
 
+    /**
+     * @var string
+     */
     private string $render;
 
-    public function __construct()
-    {
-    }
+    /**
+     * Construct
+     */
+    public function __construct(){}
 
-    public function redirectTo($controller, $method = '')
+    /**
+     * @param        $controller
+     * @param string $method
+     */
+    public function redirectTo($controller, string $method = '')
     {
         header('Location: '. $controller . $method);
         die;
@@ -49,9 +63,5 @@ abstract class Controller
         http_response_code(500);
 
         $this->showView('errors/500');
-    }
-
-    public function __destruct()
-    {
     }
 }

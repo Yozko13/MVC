@@ -3,6 +3,7 @@
 namespace App\System;
 
 use DebugBar\DebugBarTracking;
+use DebugBar\Enums\OutputDecoratorRenderTypes;
 use DebugBar\Enums\ProfilerTypes;
 
 final class Application
@@ -25,7 +26,7 @@ final class Application
     private function __sleep() {}
 
     /**
-     * Make wakeup magic method private, so nobody can unserialize instance.
+     * Make wakeup magic method private, so nobody can unserializable instance.
      */
     private function __wakeup() {}
 
@@ -43,12 +44,22 @@ final class Application
 
     /**
      * Run application
+     * Set dispatch result to DebugBarTracking
      */
     public function run()
     {
-        FrontController::getInstance()->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+        $dispatchResult = FrontController::getInstance()->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+        Registry::getDebugBarTracking()->setDispatchResult($dispatchResult);
     }
 
+    /**
+     * Registry
+     * Set global config data
+     * Set DebugBarTracking instance
+     * Set DatabaseConnection instance
+     * Set sql profiler to DebugBarTracking
+     */
     private function initRegistry()
     {
         global $config;
@@ -63,6 +74,9 @@ final class Application
         );
     }
 
+    /**
+     * Destruct
+     */
     public function __destruct()
     {
         echo Registry::getDebugBarTracking()->render();

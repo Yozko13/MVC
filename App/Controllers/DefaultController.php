@@ -4,6 +4,9 @@ namespace App\Controllers;
 
 use App\System\Controller;
 
+/**
+ * Class DefaultController
+ */
 class DefaultController extends Controller
 {
     /**
@@ -11,8 +14,5 @@ class DefaultController extends Controller
      */
     public function index() {
         $this->showView('index', ['main' => 'Default']);
-    }
-
-    public function about() {
     }
 }

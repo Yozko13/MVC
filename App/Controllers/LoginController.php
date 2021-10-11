@@ -3,11 +3,16 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\System\AuthTrait;
 use App\System\Controller;
-use App\System\Registry;
 
+/**
+ * Class LoginController
+ */
 class LoginController extends Controller
 {
+    use AuthTrait;
+
     /**
      * @throws \Exception
      */
@@ -19,13 +24,13 @@ class LoginController extends Controller
             $userModel = new User();
             $userIdAndPassword = $userModel->getUserIdAndPasswordByEmail($_POST['email']);
 
-            if(!empty($userIdAndPassword) && password_verify($_POST['password'], $userIdAndPassword->password)) {
-                $userById = $userModel->getUserById($userIdAndPassword->id);
+            if(!empty($userIdAndPassword) && password_verify($_POST['password'], $userIdAndPassword['password'])) {
+                $userById = $userModel->getUserById($userIdAndPassword['id']);
 
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['user']       = [
-                    'id'    => $userById->id,
-                    'email' => $userById->email
+                    'id'    => $userById['id'],
+                    'email' => $userById['email']
                 ];
 
                 $this->redirectTo('/user');
@@ -35,6 +40,9 @@ class LoginController extends Controller
         $this->showView('login/index', ['login' => 'Login']);
     }
 
+    /**
+     * Logout
+     */
     public function logout()
     {
         session_destroy();

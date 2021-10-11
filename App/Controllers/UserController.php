@@ -6,10 +6,16 @@ use App\Models\User;
 use App\System\AuthTrait;
 use App\System\Controller;
 
+/**
+ * Class UserController
+ */
 class UserController extends Controller
 {
     use AuthTrait;
 
+    /**
+     * Construct
+     */
     public function __construct()
     {
         if(!$this->isLoggedIn()) {
@@ -22,12 +28,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $city = [];
         $user = new User();
 
         $this->showView('user/index', [
             'main'  => 'Index Users',
-            'users' => $user->getAll($city)
+            'users' => $user->getAllByUserId()
         ]);
     }
 

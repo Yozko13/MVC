@@ -2,6 +2,9 @@
 
 namespace App\System;
 
+/**
+ * Trait AuthTrait
+ */
 trait AuthTrait
 {
     /**
