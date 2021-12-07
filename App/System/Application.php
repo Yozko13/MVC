@@ -3,9 +3,11 @@
 namespace App\System;
 
 use DebugBar\DebugBarTracking;
-use DebugBar\Enums\OutputDecoratorRenderTypes;
 use DebugBar\Enums\ProfilerTypes;
 
+/**
+ * Final class Application
+ */
 final class Application
 {
     private static $instance;
